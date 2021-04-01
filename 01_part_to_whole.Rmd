@@ -1,0 +1,65 @@
+---
+title: "01_Part_to_whole"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(waffle)
+library(extrafont)
+
+#Ctrl + ALT + I on Windows
+```
+
+
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2020, week = 4)
+spotify_songs <- tuesdata$spotify_songs
+```
+
+
+
+
+```{r}
+
+spotify_df<-spotify_songs %>% 
+  count(playlist_genre,  order=TRUE) 
+
+music<-as.vector(spotify_df$n)
+names(music)<-spotify_df$playlist_genre
+
+```
+
+```{r}
+
+p<-waffle(music/100, rows=15, size=2, 
+      #use_glyph = "child", glyph_size = 12,
+       colors= 
+        c( "lightgrey", "darkgrey", "#3A9ABD", "#B67093","red","black"),
+        #c("#44D2AC","#3A9ABD", "#B67093","red", "orange", "black"), 
+        # tableau_color_pal()(length(music)),
+       #title="Spotify Playlist Genres \n #30DayChartChallenge Day 1", 
+       xlab="1 square = 100 songs") +
+  labs(title="Spotify Playlist Genres",
+        subtitle="Day 1 #30DayChartChallenge",
+       caption = "Data Source: TidyTuesday, 2020, week 4") +
+  theme(
+    plot.title = element_text(hjust = 0, size = 24),
+    plot.subtitle = element_text(hjust = 0.5, size = 14),
+    plot.caption = element_text(hjust = 1,size=12, face = "italic"),
+    legend.text = element_text(size = 10),
+    legend.position = "right"
+  )
+
+ggsave("day1.png", dpi="screen")
+
+print(p)
+dev.off()
+
+
+```
+
+
