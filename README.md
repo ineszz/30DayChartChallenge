@@ -11,7 +11,11 @@ How to participae? If you share your contributions on Twitter, please use the ha
 
 My Participation
 
-[Day 1](01_part_to_whole.Rmd) 
+- [Day 1](01_part_to_whole.Rmd) 
+
 <img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day1.png" width=30% height=30%>
 
+- [Day2](02_Pictogram.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day2.png" width=30% height=30%>
  

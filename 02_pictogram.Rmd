@@ -1,0 +1,52 @@
+---
+title: "02_Pictogram"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(ggimage)
+library(ggtext)
+
+#Ctrl + ALT + I on Windows
+
+# Data Source: https://ec.europa.eu/eurostat/databrowser/view/sdg_05_50/default/table?lang=en
+# Seats held by women in national parliaments and governments (source: EIGE) (online data code: SDG_05_50 )
+# Source of data: European Institute for Gender Equality (EIGE)
+# Seats held by women in national governments
+#  2020: EU 32.7 vs RO 16.7
+
+seats <- data.frame(year = c(2010, 2011,2012,2013,2014,2015,2016,2017, 2018, 2019, 2020),
+                  number = c(11.8, 16.7,19, 21.4, 20, 35, 36.4, 21.4, 33.3, 17.6, 16.7))
+
+seats$image <- "day2_logo.png"
+
+ggplot(data = seats, aes(x = year, y = number)) +
+    geom_col( fill="#F0C300")+
+    geom_text(aes(label = paste0(number,"%")), vjust = 5, colour = "black")+
+    geom_point()+
+    geom_image(aes(image = image), size = 0.2) +
+    scale_x_discrete(breaks=c("2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"))+
+    ylim(0, 50)+
+    theme_minimal()+
+    theme(
+      plot.title = element_markdown(size = 14),
+      plot.subtitle = element_markdown(size = 12),
+      plot.caption = element_markdown(size = 7),
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      axis.text.y = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = "#d8ebe4")
+      )+
+    labs(title="Romania's National Goverment Women Seats, 2010-2020",
+        subtitle="Day 2 **#30DayChartChallenge**",
+        caption = "**Data Source:** EuroStat, European Institute for Gender Equality (EIGE), Feb 2021",
+        x="*Year*",
+        y="*Percentage of women seats*") 
+
+ggsave("day2.png")
+
+```
