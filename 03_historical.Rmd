@@ -1,0 +1,63 @@
+---
+title: "03_historical"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+library(viridis)
+# 
+#Ctrl + ALT + I on Windows
+
+```
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2020, week = 46)
+
+mobile<-tuesdata$mobile %>% data.frame() %>% filter(entity=="Romania")
+landline<-tuesdata$landline %>% data.frame() %>% filter(entity=="Romania")
+```
+
+
+
+```{r}
+df <- landline %>% 
+  select(code,year,landline_subs) %>% 
+  full_join(mobile, by = c("code","year")) %>% 
+  pivot_longer(cols = contains("subs"),
+               names_to = "type",
+               values_to = "subs") %>% 
+  mutate(type = recode(type,"landline_subs"="Landline","mobile_subs"="Mobile")) %>% 
+  filter(code=="ROU") %>% 
+  group_by(year,type) %>%
+  ggplot(aes(x = year, y = subs, color = type)) +
+  geom_smooth() +
+   scale_color_viridis_d() +
+  scale_x_continuous(breaks = seq(1990,2018,4)) +
+  scale_y_continuous(breaks = seq(0,100,10)) +
+  theme_minimal()+
+    theme(
+      plot.title = element_markdown(size = 11),
+      plot.subtitle = element_markdown(size = 10),
+      plot.caption = element_markdown(size = 7),
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      axis.text.y = element_blank(),
+      legend.position="right", 
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = "#d8ebe4")
+      )+
+  labs(color = "Type", 
+       x = "*Years*", 
+       y = " # of subscriptions for 100 people", 
+       title = "Mobile and landline telephone subscriptions in Romania from 1990 to 2017",
+       subtitle = "Day 3 Historical **#30DayChartChallenge**",
+        caption = "**Data Source:** TidyTuesdayR, 2020, week 46") 
+df
+
+ggsave("day3.png", dpi=300)
+
+```
