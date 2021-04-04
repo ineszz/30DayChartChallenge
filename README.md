@@ -22,4 +22,7 @@ My Participation
 - [Day3](03_historical.Rmd) 
 
 <img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day3.png" width=55% height=55%>
- 
+
+- [Day4](04_magical.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day4.png" width=55% height=55%>

@@ -1,0 +1,85 @@
+---
+title: "03_historical"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+library(viridis)
+# 
+#Ctrl + ALT + I on Windows
+
+```
+
+```{r}
+# add data from IMBDB : https://www.imdb.com/interfaces/
+title.basics<-readr::read_tsv(
+           file = gzfile(title.basic.tsv.gz),
+           col_names = TRUE,
+           quote = "",
+           na = "\\N")
+
+title.ratings<-readr::read_tsv(
+           file = gzfile(title.ratings.tsv.gz),
+           col_names = TRUE,
+           quote = "",
+           na = "\\N")
+
+data<-title.basics %>% 
+  filter(str_detect(primaryTitle,"magic")) %>% 
+  left_join(title.ratings, by = c("tconst")) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>% 
+  group_by(genres) %>% 
+  filter(numVotes>0, !is.na(genres)) %>% 
+  summarize(TVotes=sum(numVotes), 
+            avgRating=round(sum(numVotes*averageRating)/sum(numVotes),2) ) %>% 
+  arrange(desc(TVotes))
+```
+
+
+```{r}
+data %>%
+  arrange(avgRating) %>%
+  mutate(name=factor(genres, levels=genres)) %>%   
+  ggplot( aes(x=genres, y=avgRating, label=avgRating)) +
+    geom_segment( aes(xend=genres, yend=0), color="#F0C300") +
+    geom_point( size=7, color="#A6C6DE") +
+    geom_text(color = "black", size = 2.5)+
+    coord_flip() +
+    xlab("")+
+    ylab("Value of Y")+
+    theme_minimal() +
+    theme(
+    panel.grid.major.x = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.x = element_blank(),
+    plot.title = element_markdown(size = 14),
+    plot.caption = element_markdown(size = 5),
+    axis.title.x = element_markdown(size = 7),
+    axis.title.y = element_markdown(size = 7),
+    axis.text.y = element_markdown(size = 6),
+    legend.position="none",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#d8ebe4")
+  )+
+  labs(x = " *genres* ", 
+       y = " *average IMDB ratings* ", 
+       title = "Genres ratings for movies with title containing **magic** ",
+       caption = "**#30DayChartChallenge** | Day 4 Magical | @ineszz | **Data Source:** IMDB database") 
+
+
+ ggsave("day4.png", dpi=300)
+```
+
+
+
+```{r}
+
+
+
+
+```
