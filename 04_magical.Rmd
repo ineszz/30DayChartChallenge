@@ -37,6 +37,7 @@ data<-title.basics %>%
   summarize(TVotes=sum(numVotes), 
             avgRating=round(sum(numVotes*averageRating)/sum(numVotes),2) ) %>% 
   arrange(desc(TVotes))
+
 ```
 
 
@@ -69,7 +70,7 @@ data %>%
   labs(x = " *genres* ", 
        y = " *average IMDB ratings* ", 
        title = "Genres ratings for movies with title containing **magic** ",
-       caption = "**#30DayChartChallenge** | Day 4 Magical | @ineszz | **Data Source:** IMDB database") 
+       caption = "**#30DayChartChallenge** | Day 4 Magical | @inesz | **Data Source:** IMDB database") 
 
 
  ggsave("day4.png", dpi=300)
