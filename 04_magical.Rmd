@@ -1,5 +1,5 @@
 ---
-title: "03_historical"
+title: "04_magical"
 output: html_document
 ---
 
@@ -70,7 +70,7 @@ data %>%
   labs(x = " *genres* ", 
        y = " *average IMDB ratings* ", 
        title = "Genres ratings for movies with title containing **magic** ",
-       caption = "**#30DayChartChallenge** | Day 4 Magical | @inesz | **Data Source:** IMDB database") 
+       caption = "**#30DayChartChallenge** | Day 4 Magical | **Data Source:** IMDB database") 
 
 
  ggsave("day4.png", dpi=300)
