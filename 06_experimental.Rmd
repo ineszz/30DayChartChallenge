@@ -1,0 +1,95 @@
+---
+title: "06_experiemntal"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+# library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+
+my_theme<-theme(
+    panel.grid.major.x = element_blank(),
+    panel.border = element_blank(),
+    plot.title = element_markdown(face="bold",size = 12, hjust=0.5),
+    plot.subtitle = element_markdown(size = 9),
+    plot.caption = element_markdown(size = 7, hjust=0.5),
+    axis.text = element_blank(),
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    #plot.background = element_rect(fill = "#f7fcb9"),
+    legend.position="none",
+    plot.margin = margin(6,4,4,4,"mm")
+  )
+
+```
+
+```{r}
+#import data from https://www.google.com/covid19/mobility/
+dat<-read_csv("data/Global_Mobility_Report.csv") %>% 
+  data.frame() %>% 
+  filter(country_region_code=='RO',iso_3166_2_code=="RO-B")
+
+
+```
+
+```{r}
+#simpler names
+names(dat) <- c("code","country","region1","region2","metro_area","isocode","censuscode","place_id", "date",
+                  "retail and recreational areas", "groceries and pharmacies", "parks", "transit stations",
+                  "workplaces", "residential areas")
+
+#keep only needed cols
+dat <- dat[,9:15]
+
+#transpose
+dat_long <- pivot_longer(dat, cols = c("retail and recreational areas", "groceries and pharmacies", "parks", "transit stations", "workplaces", "residential areas"))
+```
+
+
+
+```{r}
+# Create viz dataset
+data <- dat_long %>% 
+  select(date, name, value) %>% 
+  filter(name == "retail and recreational areas") %>% 
+  mutate(id = row_number())
+# ----- This section prepare a dataframe for labels ---- #
+# Get the name and the y position of each label
+label_data <- data
+# calculate the ANGLE of the labels
+number_of_bar <- nrow(label_data)
+angle <-  90 - 360 * (label_data$id-0.5) /number_of_bar
+label_data$hjust<-ifelse( angle < -90, 1, 0)
+# flip angle BY to make them readable
+label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+
+```
+
+
+```{r} 
+# Start the plot
+p <- ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +    
+        geom_bar( stat="identity", fill=alpha("#e34a33", 0.35) ) +
+        scale_fill_gradient(low="red", high="white", limits=c(5,40)) +
+        ylim(-400,20) +
+        theme_minimal() +
+        coord_polar(start = 0) +
+        theme(plot.margin = unit(rep(-2,4), "cm") ) +
+        labs(
+            title = "Mobility in Bucharest",
+            #subtitle = " *starting Feb 2020* ",
+            caption = " #30DayChartChallenge | Day 6 Experimental <br> Data Source: Google Mobility Report",
+            x="",
+            y=""
+            ) + my_theme 
+ 
+p
+
+ggsave("day6.png", height = 3.5, width = 7, dpi=300)
+
+```
