@@ -26,3 +26,31 @@ My Participation
 - [Day4](04_magical.Rmd) 
 
 <img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day4.png" width=55% height=55%>
+
+- [Day5](05_slope.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day5.png" width=55% height=55%>
+
+- [Day6](06_experimental.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day6.png" width=55% height=55%>
+
+- [Day7](07_physical.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day7.png" width=55% height=55%>
+
+- [Day8](08_animals.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day8.png" width=55% height=55%>
+
+- [Day9](09_statistics.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day9.png" width=55% height=55%>
+
+- [Day10](10_abstract.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day10.png" width=55% height=55%>
+
+- [Day11](11_circular.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day11.png" width=55% height=55%>
