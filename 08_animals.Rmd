@@ -1,0 +1,91 @@
+---
+title: "08_animals"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+
+
+#bring data on adoptable dogs // Dec 2019
+  tuesdata <- tidytuesdayR::tt_load(2019, week = 51)
+  dog_desc<-tuesdata$dog_descriptions %>% data.frame()
+  
+my_colors<-c("#636363","#e0ecf4", "#fde0dd" ,"#9ebcda" )
+
+
+my_theme<-theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_markdown(face="bold",size = 13, hjust=0.5, color="#252525"),
+    plot.title.position = "plot",
+    plot.subtitle = element_markdown(size = 9,hjust=0.5, color="#636363"),
+    plot.caption = element_markdown(size = 7, hjust=0.5, color="#252525"),
+    strip.text = element_text(face = "bold", color = "white",hjust = 0.5, size = 10),
+    strip.background = element_rect(fill = "#636363", linetype = "solid", color="grey"),
+    axis.text = element_blank(),
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.text.x = element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.ticks.y=element_blank(),
+    plot.background = element_rect(fill = "#fde0dd"),
+    legend.position="none",
+    plot.margin = margin(6,4,4,4,"mm")
+
+  )
+
+
+
+```
+
+
+```{r}
+levels<-c("Baby","Young","Adult", "Senior")
+
+p<-dog_desc %>%  
+  filter(status=="adoptable") %>% 
+  mutate(no=row_number()) %>% 
+  select(no, age) %>% 
+  rename(labels=age) %>% 
+ transform( labels=factor(labels,levels=levels)) %>% 
+    ggplot( aes(x=no, group=labels, fill=labels)) +
+    geom_density(adjust=1.2) +
+    scale_fill_manual(values=c( "#fde0dd" ,"#e0ecf4","#9ebcda","#1c9099")) +
+    facet_wrap(~labels, ncol=4)+
+    theme_bw() +
+    labs(
+            title = "Dogs we can Adopt",
+            # subtitle = " per age ",
+            caption = " #30DayChartChallenge | Day 8 Animals <br> Data Source: TidytuesdayR, 2019",
+            x="",
+            y=""
+            )+
+  my_theme 
+ 
+p
+
+ggsave("day8.png", height = 3.5, width = 7, dpi=300)
+
+
+```
+
+
+```{r}
+
+# p1<-dog_desc %>%  
+#   filter(status=="adoptable") %>%
+#   mutate(no=row_number()) %>% 
+#   select(no, age) %>% 
+#   rename(cat=age) %>% 
+#   ggplot( aes(x=no, group=cat, fill=cat)) +
+#     geom_density(adjust=1.5, position="fill") + my_theme
+# p1
+```
+

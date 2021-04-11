@@ -1,0 +1,73 @@
+---
+title: "07_physical"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(ggtext)
+
+my_colors<-c("#636363","#e0ecf4", "#fde0dd" ,"#9ebcda" )
+
+
+my_theme<-theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_markdown(face="bold",size = 13, hjust=0.5, color="#636363"),
+    plot.title.position = "plot",
+    plot.subtitle = element_markdown(size = 9, color="#636363"),
+    plot.caption = element_markdown(size = 7, hjust=0.5, color="#636363"),
+    strip.text = element_text(face = "bold", color = "white",hjust = 0.5, size = 10),
+    strip.background = element_rect(fill = "#636363", linetype = "solid", color="grey"),
+    axis.text = element_blank(),
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.text.x = element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.ticks.y=element_blank(),
+    plot.background = element_rect(fill = "#fde0dd"),
+    legend.position="none",
+    plot.margin = margin(6,4,4,4,"mm")
+
+  )
+
+
+
+```
+
+```{r}
+#histogram data
+clus1=rnorm(2000)
+clus2=rnorm(1000, 1, 2)
+combined = c(clus1, clus2)
+dt<-data.frame(data=c(combined, clus1, clus2), labels=rep(c("Combined", "Clus1", "Clus2"), c(3e6, 2e6, 1e6)))
+```
+
+
+```{r}
+p<-dt %>% 
+  transform( labels=factor(labels,levels=c("Clus1","Combined","Clus2"))) %>% 
+    ggplot( aes(x=data, fill=labels)) +
+    geom_histogram(color="white",alpha=0.6, position = 'identity') +
+    scale_fill_manual(values=c("#e0ecf4", "#fde0dd" ,"#9ebcda")) +
+    facet_wrap(~labels)+
+    theme_bw() + my_theme+
+    labs(
+            title = "Distribution on sintetic data",
+            #subtitle = " *starting Feb 2020* ",
+            caption = " #30DayChartChallenge | Day 7 Physical <br> Data Source: Sintetic",
+            x="",
+            y=""
+            )+
+  my_theme 
+ 
+#p
+
+ggsave("day7.png", height = 3.5, width = 7, dpi=300)
+
+
+```

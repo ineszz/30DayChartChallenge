@@ -1,0 +1,106 @@
+---
+title: "09_statistics"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+library(ggwordcloud)
+library(tidytext) # for NLP
+#library(patchwork)
+
+
+#bring data on adoptable dogs // Dec 2019
+  tuesdata <- tidytuesdayR::tt_load(2020, week = 50)
+  dat<-tuesdata$women %>% data.frame()
+  
+my_colors<-c("#636363","#e0ecf4", "#fde0dd" ,"#9ebcda" )
+
+
+my_theme<-theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_markdown(size = 13, hjust=0.5, color="#252525"), 
+    plot.title.position = "plot",
+    plot.subtitle = element_markdown(size = 11,hjust=0.5, color="#636363"),
+    plot.caption = element_markdown(size = 7, hjust=0.5, color="#252525"),
+    strip.text = element_text(face = "bold", color = "white",hjust = 0.5, size = 9),
+    strip.background = element_rect(fill = "#636363", linetype = "solid", color="grey"),
+    axis.text = element_markdown(),
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.text.x = element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.ticks.y=element_blank(),
+    plot.background = element_rect(fill = "#fde0dd"),
+    legend.position="none",
+    plot.margin = margin(6,4,4,4,"mm")
+
+  )
+
+
+
+```
+
+
+```{r}
+
+fr1<-dat %>% 
+  count(category,sort=TRUE)
+
+p<-ggwordcloud(fr1$category, fr1$n) +  my_theme
+p
+
+#text mining
+tokens <- dat %>% 
+  group_by(category) %>% 
+  unnest_tokens(word,description) %>% 
+  dplyr::count(word, sort = TRUE) %>% 
+  ungroup()
+
+data("stop_words")
+tokens_clean <- tokens %>%
+  anti_join(stop_words)
+
+# remove numbers
+nums <- tokens_clean %>% filter(str_detect(word, "^[0-9]")) %>% select(word) %>% unique()
+
+tokens_clean <- tokens_clean %>% 
+  anti_join(nums, by = "word")
+
+
+p1<-tokens_clean %>%
+  filter(!category=="All") %>% 
+  group_by(category) %>%
+  arrange(desc(n)) %>% 
+  slice(1:5) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill= category)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ category, scales = "free", ncol=4) +
+  scale_fill_brewer(palette = "PuOr"
+                    , name = "Categories")+
+  coord_flip()+
+        labs(
+            title = "words describing <span style = 'color:#c51b8a;'>**Women**</span> nominated by **BBC**",
+            subtitle = "",
+            caption = " #30DayChartChallenge | Day 9 Statistics <br> Data Source: TidytuesdayR, 2020",
+            x="",
+            y=""
+            )+
+  my_theme
+
+p1
+
+ggsave("day9.png", height = 3.5, width = 7, dpi=300)
+
+
+```
+

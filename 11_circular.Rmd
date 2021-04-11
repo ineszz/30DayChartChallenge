@@ -1,0 +1,107 @@
+---
+title: "11_circular"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+#library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+
+
+my_theme<-theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_markdown(size = 13, hjust=0.5, color="#252525"), 
+    plot.title.position = "plot",
+    plot.subtitle = element_markdown(size = 11,hjust=0.5, color="#636363"),
+    plot.caption = element_markdown(size = 7, hjust=0.5, color="#252525"),
+    strip.text = element_text(color = "white",hjust = 0.5, size = 5),
+    strip.background = element_rect(fill = "#fc8d62", linetype = "solid", color="white"),
+    axis.text = element_blank(),
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.text.x = element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.ticks.y=element_blank(),
+    plot.background = element_rect(fill = "#fde0dd"),
+    legend.position="none",
+    plot.margin = margin(6,4,4,4,"mm")
+
+  )
+
+
+
+```
+
+
+```{r}
+#import data from https://www.google.com/covid19/mobility/
+dat<-read_csv("data/Global_Mobility_Report.csv") %>% 
+  data.frame() %>% 
+  filter(country_region_code=='RO',iso_3166_2_code=="RO-B")
+
+#simpler names
+names(dat) <- c("code","country","region1","region2","metro_area","isocode","censuscode","place_id", "date",
+                  "retail and recreational areas", "groceries and pharmacies", "parks", "transit stations",
+                  "workplaces", "residential areas")
+
+#keep only needed cols
+dat <- dat[,9:15]
+
+#transpose
+dat_long <- pivot_longer(dat, cols = c("retail and recreational areas", "groceries and pharmacies", "parks", "transit stations", "workplaces", "residential areas"))
+```
+
+```{r}
+# Create viz dataset
+data <- dat_long %>% 
+  select(date, name, value) %>% 
+  group_by(name) %>% 
+#  filter(name == "retail and recreational areas") %>% 
+  mutate(id = row_number()) %>% 
+  ungroup()
+
+# ----- This section prepare a dataframe for labels ---- #
+# Get the name and the y position of each label
+label_data <- data
+# calculate the ANGLE of the labels
+number_of_bar <- nrow(label_data)
+angle <-  90 - 360 * (label_data$id-0.5) /number_of_bar
+label_data$hjust<-ifelse( angle < -90, 1, 0)
+# flip angle BY to make them readable
+label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+```
+
+
+```{r}
+#      scale_fill_brewer(palette = "PuOr") +
+
+p <- ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +    
+        geom_bar( stat="identity",fill="#d95f0e" ) +
+        ylim(-400,20) +
+        theme_minimal() +
+        coord_polar(start = -0.15) +
+        facet_wrap(~ name, ncol=3, labeller = label_wrap_gen(width=35)) +
+        theme(plot.margin = unit(rep(-2,4), "cm") ) +
+        labs(
+            title = "Bucharest <span style = 'color:#d95f0e;'>**Mobility**</span> ",
+            subtitle = "",
+            caption = " #30DayChartChallenge | Day 11 Circular <br> Data Source: Google Mobility Report",
+            x="",
+            y=""
+            )+
+  my_theme
+
+p
+
+ggsave("day11.png", height = 3.5, width = 7, dpi=300)
+
+
+```
+
