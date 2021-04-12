@@ -54,3 +54,7 @@ My Participation
 - [Day11](11_circular.Rmd) 
 
 <img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day11.png" width=55% height=55%>
+
+- [Day12](12_strips.Rmd) 
+
+<img src="https://github.com/ineszz/30DayChartChallenge/blob/main/day12.png" width=55% height=55%>
