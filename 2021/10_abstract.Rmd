@@ -1,0 +1,81 @@
+---
+title: "10_abstract"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(ggtext)
+#library(patchwork)
+
+
+#bring data on adoptable dogs // Dec 2019
+  # tuesdata <- tidytuesdayR::tt_load(2020, week = 50)
+  # dat<-tuesdata$women %>% data.frame()
+  
+my_colors<-c("#636363","#e0ecf4", "#fde0dd" ,"#9ebcda" )
+
+
+
+```
+
+
+```{r}
+#Canvas
+canvas <- ggplot(data=data.frame(x=1:10, y=1:10), aes(x=x, y=y))   +
+          scale_y_continuous(limits=c(1,10), breaks=seq(1,10,0.5)) +
+          scale_x_continuous(limits=c(1,10), breaks=seq(1,10,0.5)) +
+          theme(panel.background = element_rect(fill = '#DEEBF7', colour = '#DEEBF7')) 
+canvas
+
+#Create individual panels
+panel1 <- canvas + 
+          theme_void() + 
+          theme(panel.background = element_rect(fill = '#DEEBF7', colour = '#DEEBF7')) +
+          geom_text(family='fontawesome-webfont', label=fontawesome('fa-user-md'), 
+                    x=5.5, y=5.5, size=75) +
+          annotate("text", x=5.5, y=9,   label = "Finding 1",    size=13, fontface=2) +
+          annotate("text", x=5.5, y=2.5, label = "Statistics 1", size=10, fontface=2) +
+          annotate("text", x=5.5, y=1.5, label = "Units 1",      size=10, fontface=2) 
+
+
+p4<-canvas + 
+          theme(panel.background = element_rect(fill = '#DEEBF7', colour = '#DEEBF7')) +
+          annotate("text", x=5.5, y=0,   label = "Footer",    size=15, fontface=2)
+
+#Arrange individual panels 
+grid.arrange(panel1, panel2, panel3, ncol=3)/p4
+```
+
+
+```{r}
+#Canvas
+canvas <- ggplot(data=data.frame(x=1:10, y=1:10), aes(x=x, y=y))   +
+          scale_y_continuous(limits=c(1,10), breaks=seq(1,10,0.5)) +
+          scale_x_continuous(limits=c(1,10), breaks=seq(1,10,0.5)) +
+          theme_linedraw()
+```
+
+
+```{r}
+p1<-
+  
+
+        labs(
+            title = "words describing <span style = 'color:#c51b8a;'>**Women**</span> nominated by **BBC**",
+            subtitle = "",
+            caption = " #30DayChartChallenge | Day 10 Abstract <br> Data Source: sintetic",
+            x="",
+            y=""
+            )+
+  my_theme
+
+p1
+
+ggsave("day10.png", height = 3.5, width = 7, dpi=300)
+
+
+```
+

@@ -1,0 +1,90 @@
+---
+title: "22_animation"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggiraphExtra)
+library(ggtext)
+library(gganimate)
+
+```
+
+
+```{r}
+
+my_colors<-c("#636363","#e0ecf4", "#fde0dd" ,"#9ebcda" )
+
+my_theme<-theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_markdown(size = 13, hjust=0, color="#252525"), 
+    plot.title.position = "plot",
+    plot.subtitle = element_markdown(size = 11,hjust=0, color="#636363"),
+    plot.caption = element_markdown(size = 7, hjust=0.5, color="#252525"),
+    strip.text = element_text(face = "bold", color = "white",hjust = 0.5, size = 6),
+    strip.background = element_rect(fill = "#636363", linetype = "solid", color="grey"),
+    axis.text = element_markdown(),
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.text.x = element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.ticks.y=element_blank(),
+    #plot.background = element_rect(fill = "#fde0dd"),
+    legend.position="right",
+    plot.margin = margin(6,4,4,4,"mm")
+
+  )
+
+```
+
+
+
+```{r}
+dat <- read_csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/Romania.csv") %>% 
+  data.frame()
+
+dat <- dat %>% 
+  mutate(daily_vaccinated = (people_vaccinated - lag(people_vaccinated, n = 1)),
+         daily_vaccinations = (total_vaccinations - lag(total_vaccinations, n = 1)),
+          month=substr(date,0,7),
+         date = as.Date(date, "%m/%d") )
+dat$daily_vaccinated[is.na(dat$daily_vaccinated)] <- dat$people_vaccinated[1]
+dat$daily_vaccinations [is.na(dat$daily_vaccinations )] <- dat$total_vaccinations[1]
+```
+
+
+
+```{r}
+p <- ggplot(dat, aes(x = date, y = daily_vaccinated)) +
+  geom_point(aes( group = 1L)) + 
+  my_theme +
+  labs(title =" <span style ='color:#a50f15;'>Romania</span> **Dose 1 Daily Vaccinations**",
+        subtitle = "  {closest_state} ", 
+        caption = " #30DayChartChallenge | Day 22 Animation <br>Viz: inesz | Data Source: Our World in Data ",
+        x = "Day of Month", 
+        y = "Dose 1 ")
+
+#plot(p)
+
+p + transition_states(month,
+                    transition_length = 1,
+                    state_length = 1, wrap= TRUE)+
+  shadow_mark()+
+  enter_grow()+
+  enter_fade()+
+  exit_fade()+  exit_shrink()
+```
+
+
+
+```{r}
+
+anim_save("day22.gif", height = 4.5, width = 9, dpi=150)
+
+```
+

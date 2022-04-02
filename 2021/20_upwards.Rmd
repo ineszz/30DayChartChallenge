@@ -1,0 +1,51 @@
+---
+title: "20_upwards"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+#library(ggimage)
+library(ggtext)
+
+#Ctrl + ALT + I on Windows
+
+dat <- read_csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/Romania.csv") %>% 
+  data.frame()
+
+dat <- dat %>% 
+  mutate(daily_vaccinated = (people_vaccinated - lag(people_vaccinated, n = 1)),
+         daily_vaccinations = (total_vaccinations - lag(total_vaccinations, n = 1)),
+          month=substr(date,0,7))
+dat$daily_vaccinated[is.na(dat$daily_vaccinated)] <- dat$people_vaccinated[1]
+dat$daily_vaccinations [is.na(dat$daily_vaccinations )] <- dat$total_vaccinations[1]
+
+dat%>% 
+  group_by(month) %>% 
+  summarise(daily_vaccinated=sum(daily_vaccinated),
+            daily_vaccinations=sum(daily_vaccinations)) %>% 
+  ggplot(aes(x = month, y = daily_vaccinations)) +
+    geom_col( fill="#F0C300")+
+    geom_text(aes(label = paste0(round(daily_vaccinations/1000,0),"K")), vjust = 0, colour = "black")+
+    theme_minimal()+
+    theme(
+      plot.title = element_markdown(size = 14),
+      plot.subtitle = element_markdown(size = 12),
+      plot.caption = element_markdown(size = 7),
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      axis.text.y = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = "#d8ebe4")
+      )+
+    labs(title="Romania's COVID19 Vaccinations , 2020-present",
+        subtitle="Day 20 **#30DayChartChallenge**",
+        caption = "**Data Source:** Our World in Data, April 2021",
+        x="*Monthly Evolution*",
+        y="*Vaccinations*") 
+
+#ggsave("day3.png")
+
+```
