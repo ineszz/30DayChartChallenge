@@ -15,7 +15,7 @@ https://github.com/30DayChartChallenge/Edition2022
 
 **List of topics**
 
-1. part-to-whole
+1. part-to-whole <img src ="https://github.com/ineszz/30DayChartChallenge/blob/main/day01.png?raw=true" width=100% height=100%>
 2. pictogram
 3. historical
 4. flora
