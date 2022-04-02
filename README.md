@@ -11,6 +11,8 @@ If you share your contributions on Twitter, please use the hashtag #30DayChartCh
 
 https://github.com/30DayChartChallenge/Edition2022
 
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">📢 1 day left! Are you really prepared? 😁<br><br>In the meantime, here you have again all the prompts for the 30 days. More information on data resources and chart types you will find on GitHub: <a href="https://t.co/yZG79Crt4K">https://t.co/yZG79Crt4K</a><br><br>Let us know if you have any further questions! 🙂 <a href="https://t.co/kIItwxXrTZ">pic.twitter.com/kIItwxXrTZ</a></p>&mdash; #30DayChartChallenge (@30DayChartChall) <a href="https://twitter.com/30DayChartChall/status/1509439977674915843?ref_src=twsrc%5Etfw">March 31, 2022</a></blockquote> 
+
 **List of topics**
 
 1. part-to-whole
